@@ -1,6 +1,6 @@
-#'@Desc *Compute the daily cumulative land surface temperature minus air temperature (Ts-Ta) integral for the sub-diurnal window (Wdiur) straddling mid-day*
+#'@Desc *Compute the daily cumulative hourly land surface temperature minus air temperature (Ts-Ta) integral for the sub-diurnal window (Wdiur) straddling mid-day*
 #'@Desc *with Wdiur being the most common 4-hour period with maximum total Ts-Ta*
-#'@Note *Due to the large processing requirements, the scripts were broken into batches of grid cells and batches of time periods (YYYYMM)*
+#'@Note *Due to the large processing requirements, the computation was broken into batches of grid cells and batches of time periods (YYYYMM)*
 #'@Note *However, the structure of the script is straightforward, so if a high-performance computing system isn't available*
 #'@Note *but the turnaround time isn't a key constraint, one could simplify the scripts to be a longer 'for loop' and let it run longer.*
 
@@ -24,8 +24,8 @@ path2TAIR = paste0(work_dir, 'input_data/hourly_ta/')
 
 # Source the functions relevant to the script
 path2FUNS = paste0(work_dir, 'functions/')
-# Path to output for calculated daily cumulative Ts-Ta (herein use dT in the codes to denote 'difference in temperature')
-path2SumdT_OUT  = paste0(work_dir, 'test_output/')
+# Path to output for individual batches of calculated daily cumulative Ts-Ta (herein use dT in the codes to denote 'difference in temperature')
+path2SumdT_BATCH  = paste0(work_dir, 'test_output/1_SumdT_Batch/')
 
 # Function to extract geostationary LST 
 source(paste0(path2FUNS, 'extract_GEOSLST_UTC.R'))
