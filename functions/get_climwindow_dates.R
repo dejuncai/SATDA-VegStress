@@ -4,7 +4,7 @@
 #'@param full_dates the full sequence of dates considered in the analysis
 #'@param window plus/minus window size (default is 15, equivalent to 31-day around the target date)
 
-get_dates_climwindow = function(target_date, full_dates, window = 15) {
+get_climwindow_dates = function(target_date, full_dates, window = 15) {
   library(lubridate)
   
   # Obtain the target date's month-date 
