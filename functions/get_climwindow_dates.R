@@ -2,10 +2,17 @@
 
 #'@param target_date target date for computing multi-year climatology window
 #'@param full_dates the full sequence of dates considered in the analysis
-#'@param window plus/minus window size (default is 15, equivalent to 31-day around the target date)
+#'@param window plus/minus window size (default is 15 equivalent to 31-day around the target date)
+
+# target_date = as.Date("2016-02-29")
+# ES_Period = seq(as.Date(paste0(2015, "-08-01")),
+#                 as.Date(paste0(2022, "-12-31")), 1)
+# full_dates = ES_Period
+# 
+# get_dates_climwindow(target_date, ES_Period) # Ensure that using full window for non-leap years..
+
 
 get_climwindow_dates = function(target_date, full_dates, window = 15) {
-  library(lubridate)
   
   # Obtain the target date's month-date 
   md_target_date = format(target_date, "%m-%d")
@@ -13,11 +20,10 @@ get_climwindow_dates = function(target_date, full_dates, window = 15) {
   md_full_dates = format(full_dates, "%m-%d")
   
   if (md_target_date == '02-29') {
-
-    # If the target date is on 29/Feb, take the climatology window as in the leap year across the full analysis period
-    # This is because 29/Feb is not present in other years, so we can't directly get the climatology window 
     
-    # Use the date in the leap year (take 2016 as example)
+    ## Special case of the leap year
+    # If the target date is on 29/Feb, take the climatology window like in the leap year across the full analysis period
+    # This is because 29/Feb is not present in other years, so we can't directly get the climatology window 
     md_2016 = as.Date(paste0(2016, '-', md_target_date))
     
     # Climatology window surrounding this date in the leap year
