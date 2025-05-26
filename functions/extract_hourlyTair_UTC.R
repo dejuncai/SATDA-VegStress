@@ -1,3 +1,8 @@
+#'@Desc *Extract hourly time series of gridded air temperature by the specified target UTC hourly time steps*
+#'@param lon vector of longitudes of locations (numeric)
+#'@param lat vector of latitudes of locations (numeric)
+#'@param UTC_datetime_seq vector of time steps in UTC time for the time series
+#'@param path2TAIR path to the directory that stores hourly air temperature (user-specific)
 
 extract_hourlyTair_UTC = function(lon, lat, UTC_datetime_seq, path2TAIR) {
 
@@ -5,18 +10,19 @@ extract_hourlyTair_UTC = function(lon, lat, UTC_datetime_seq, path2TAIR) {
 
   # Convert target grid cell locations to spatial points for later extraction
   point_vect_lonlat = vect(data.frame(lon = lon, lat =  lat),
+                           geom = c("lon", "lat"),
                            crs = 'epsg:4326')
-  # Projection to the corresponding Australian albers projection
+  # Projection to the corresponding Australian albers projection for the gridded hourly dataset
   point_vect_proj = project(point_vect_lonlat, 'epsg:3577')
 
-  # Obtain the unique UTC dates (as the data are stacked into daily grids, each layer being one hour)
+  # Obtain the unique UTC dates (the hourly tair data are stacked into daily grids, each layer being one hour)
   UTC_dates = unique( date(UTC_datetime_seq) )
   
   # Loop over each date to extract data from each daily stack
   HourlyTa_ts = NULL
   
   for (i in seq_along(UTC_dates)) {
-    
+    # Current UTC date
     date_c = UTC_dates[i]
     
     # File name for the hourly tair for the current UTC date 
@@ -35,10 +41,10 @@ extract_hourlyTair_UTC = function(lon, lat, UTC_datetime_seq, path2TAIR) {
     UTC_hours_layer = hour(UTC_hours_date_c) + 1
     
     # Subset the included hours for this date in the input datetime steps
-    HourlyTa_UTC_hours_date_SUB = HourlyTa_date_stack[[UTC_hours_layer]]  
+    HourlyTa_UTC_date_SUB = HourlyTa_date_stack[[UTC_hours_layer]]  
     
     #'@Note Extract monthly time series from raster stack
-    HourlyTa_date_DATA  = t(as.matrix(terra::extract(HourlyTa_UTC_hours_date_SUB, 
+    HourlyTa_date_DATA  = t(as.matrix(terra::extract(HourlyTa_UTC_date_SUB, 
                                                      point_vect_proj, ID = FALSE)))
     
     #'@Note [Account for one point vs multi-point extraction]
