@@ -1,4 +1,8 @@
-#'@Desc *Extract hourly time series of ChibaLST on UTC hour mark by the specified target UTC hourly time steps*
+#'@Desc *Extract hourly time series of geostationary LST (here, Chiba university's Himawari LST) on the UTC hour mark for the specified UTC hourly time steps*
+#'@param lon vector of longitudes of locations (numeric)
+#'@param lat vector of latitudes of locations (numeric)
+#'@param UTC_datetime_seq vector of time steps in UTC time for the time series
+#'@param path2LST path to the directory that stores the geostationary LST (user-specific)
 
 extract_GEOSLST_UTC = function(lon, lat, UTC_datetime_seq, path2LST) {
   
