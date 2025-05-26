@@ -24,7 +24,7 @@ get_batch_parallel = function(batchnum, entire, size) {
     # It will be a normal full subset of values with the desired size 
     end_ind = size * batchnum
     batch_args = entire[start_ind : end_ind]
-    
+     
   } else if (start_ind > N_args) {
     # If start index is greater than the total number of values: it's an error, stop.
     stop("Batch index exceeds total points, stop")
