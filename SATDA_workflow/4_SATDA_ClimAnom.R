@@ -25,9 +25,6 @@ path2SATDA_CLIM = paste0(work_dir, 'test_output/4_SATDA_Climatology/')
 # Path to output anomalies of daily Ts-Ta integral which leads to SATDA metric
 path2SATDA_ANOM = paste0(work_dir, 'test_output/4_SATDA_Anomaly/')
 
-# Function to obtain the multi-year window around each DoY to computing climatology climatology window
-source(paste0(path2FUNS, 'get_climwindow_dates.R'))
-
 # Define DoY / month-date to compute the climatology and anomaly -----
 
 # Full study period (Aug/2015 to Dec/2022)
@@ -38,14 +35,15 @@ full_period = seq(as.Date(paste0(2015, "-08-28")),
 # All 366 Month-Date combination 
 MonthDates = sort(unique(format(full_period, '%m-%d')))
 
-# Subset to one target Month-Date(MMDD)
+# Obtain the parallel argument for day-of-year (numeric)
 DoY  = as.numeric(commandArgs(trailingOnly = T))
 
+# Subset to one target Month-Date(MMDD)
 MMDD = MonthDates[DoY]
 
-##########################################################################~
+#############################################################################################################~
 ################ MAIN LINE: CLIMATOLOGY & ANOMALY COMPUTATION FOR EACH MONTH-DATE ##########################
-##########################################################################~
+#############################################################################################################~
 
 # Dates matching this Month-Date in the full analysis period
 dates_md = full_period[which(format(full_period, '%m-%d') == MMDD)]
@@ -53,6 +51,9 @@ dates_md = full_period[which(format(full_period, '%m-%d') == MMDD)]
 # Obtain the +/- 15-day window surrounding the target Month-Date in the full analysis period 
 # Use +/- 15-day window to mimic a monthly climatology 
 #'@Note [use 'climwindow' in the variable names to highlight that this is the window for climatology]
+
+# Function to obtain the multi-year window around each DoY to computing climatology climatology window
+source(paste0(path2FUNS, 'get_climwindow_dates.R'))
 
 dates_climwindow_md = get_climwindow_dates(target_date = dates_md[1], 
                                            full_dates = full_period, 
@@ -122,7 +123,7 @@ print(paste0("Write climatology raster for ", MMDD))
 
 # Array indices for dates in the climatology window that matches the target Month-Date 
 # e.g., if the target Month-Date is 01-03 (03/Jan),
-# the dates would include 2016-01-03, 2017-01-03, ..., 2022-01-03 if the study period is 2016 to 2022
+# the dates would include 2016-01-03, 2017-01-03, ..., 2022-01-03 when the study period is 2016 to 2022
 
 dates_md_indices = which(dates_climwindow_md %in% dates_md)
 
@@ -131,7 +132,7 @@ dates_md_indices = which(dates_climwindow_md %in% dates_md)
 SumdT_MA_md_stack = SumdT_MA_climwindow_stack[[dates_md_indices]]
 
 #'@Note [Compute the standardised anomaly for dates matching the target Month-Date with respect to the climatology statistics]
-#'@Note [This leads to a raster stack for all dates matching the target Month-Date]
+#'@Note [This leads to a raster stack of anomaly for all dates matching the target Month-Date]
 SumdT_Anom_md_stack =  (SumdT_MA_md_stack - SumdT_MA_MEAN_r)/SumdT_MA_SD_r
 
 # Rounding to 3 decimal places to reduce data storage while maintaining good precision

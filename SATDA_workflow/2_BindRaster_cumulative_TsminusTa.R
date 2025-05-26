@@ -6,7 +6,6 @@
 #'@Note *However, the structure of the script is straightforward, so if a high-performance computing system isn't available*
 #'@Note *but the turnaround time isn't a key constraint, one could simplify the scripts to be a longer 'for loop' and let it run longer.*
 
-
 rm(list = ls())
 
 library(terra)
@@ -66,20 +65,20 @@ SumdT_ym_fns  = list.files(path = path2SumdT_BATCH,
 # Obtain the batch number of grid cells 
 batches_string = str_extract(basename(SumdT_ym_fns), 
                              pattern = "(?<=Batch)(\\d+)(?=_.*)")
-
-# Sort the batch number 
+# Sort the batch numbers in increasing order 
 batches_num = sort(unique(as.numeric(batches_string)), decreasing = F)
 
 # Storage of cumulative hourly Ts-Ta for this YM across all grid cells
 SumdT_data_ym = NULL
 
+# Loop each batch to bind the output 
 for (b in batches_num) {
   
   # Find the corresponding file name for the target batch number `b`
   batch_SumdT_ym_fn = grep(pattern = paste0('Batch', b, '_'),
                            x = SumdT_ym_fns, value = T)
 
-  # Read the computed daily cumulative hourly Ts-Ta for this batch (for specific zone, in this year-month)
+  # Read the computed daily cumulative hourly Ts-Ta for this batch
   batch_SumdT_ym_data = fread(batch_SumdT_ym_fn, header = F)
   
   # Assign column name
@@ -140,7 +139,7 @@ for (i in seq_along(YM_dates)) {
 # Combine the raster layers in the list into the monthly raster stack 
 SumdT_ym_stack = rast(SumdT_ym_list)
 
-# Write the monthly raster stack of cumulative hourly Ts-Ta
+# Write the monthly raster stack of daily cumulative hourly Ts-Ta
 terra::writeRaster(SumdT_ym_stack,
                    paste0(path2SumdT_RASTER, 
                           "SumdT_", "Wdiur_4hr_" ,

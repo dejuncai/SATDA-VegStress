@@ -16,7 +16,6 @@ work_dir = './' # {work directory, please specify your own}
 
 # Source the functions relevant to the script
 path2FUNS = paste0(work_dir, 'functions/')
-
 # Path to SATDA anomalies
 path2SATDA_ANOM = paste0(work_dir, 'test_output/4_SATDA_Anomaly/')
 # Path to outputs of monthly summary statistics  
@@ -27,9 +26,9 @@ path2SATDA_MONTHLY_RAST = paste0(work_dir, 'test_output/5_SATDA_MonthlyStats/')
 # `period`: parallel argument
 period = as.numeric(commandArgs(trailingOnly = T))
 
-# Full study period (Aug/2015 to Dec/2022)
+# Full period to compute the monthly statistics
 #'@Note *As the first date of composited value is 28/Aug/2015 due to the selected 4-week backward composite window, *
-#'@Note *the first complete Year-Month is Sept 2015*
+#'@Note *the first complete Year-Month for computing monthly statistics is Sept 2015*
 
 full_period = seq(as.Date(paste0(2015, "-09-01")), 
                   as.Date(paste0(2022, "-12-31")), 1)
@@ -73,7 +72,7 @@ SATDA_monthmax_r = app(SATDA_YM_stack, fun = max, na.rm = T)
 # Rounding to 3 d.p.
 SATDA_monthmax_r = round(SATDA_monthmax_r, 3)
 
-# Write monthly raster for average and extreme 
+# Write monthly average and maximum raster for the target Year-Month
 
 terra::writeRaster(SATDA_monthmean_r, 
                    paste0(path2SATDA_MONTHLY_RAST,

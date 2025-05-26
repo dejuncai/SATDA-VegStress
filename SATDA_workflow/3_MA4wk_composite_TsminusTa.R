@@ -2,8 +2,7 @@
 #'@Desc *This temporal composite step helps fill the cloud-induced gaps in daily cumulative (Ts-Ta) and*
 #'@Desc *reduce the short-term noise due to incomplete cloud screening, residual atmospheric effects or abrupt synoptic-scale events*
 
-#'@Note 'backward' means that 
-
+#'@Note *'backward' means that the date of the composited value is the last day of the composite window*
 #'@Note *Due to large processing requirements, the computation was broken into batches / subsets of dates in the study period*
 #'@Note *However, the structure of the script is straightforward, so if a high-performance computing system isn't available*
 #'@Note *but the turnaround time isn't a key constraint, one could simplify the scripts to be a longer 'for loop' and let it run longer.*
@@ -79,8 +78,9 @@ for (i in seq_along(batch_dates)) {
     
     # Obtain the file name for the raster stack of (Ts-Ta) integral for the given YYYYMM
     SumdT_ym_fn = list.files(path2SumdT_RASTER,
-                             paste0("Chiba_SumdT.*", ym), 
+                             paste0("SumdT.*", ym), 
                              full.names = T)
+    
     # Read the monthly raster stack of daily (Ts-Ta) integral
     SumdT_ym_stack = rast(SumdT_ym_fn)
     

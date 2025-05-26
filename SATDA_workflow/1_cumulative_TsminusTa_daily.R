@@ -97,7 +97,7 @@ for (ym in Batch_YM) {
   YM_dates = get_dates_ym(ym)
   
   for (i in seq_along(YM_dates)) {
-    
+    # Current date
     date_c = YM_dates[i]
     
     # 1. Organise data frame for timesteps of the 4-hour (Ts-Ta) window for each grid cell -----
