@@ -1,7 +1,5 @@
 #'@Desc *Extract hourly time series of ChibaLST on UTC hour mark by the specified target UTC hourly time steps*
 
-# UTC_datetime_seq = midday_UTC_Hours_all
-
 extract_GEOSLST_UTC = function(lon, lat, UTC_datetime_seq, path2LST) {
   
   # Empty template for the Himawari data for Australia if the data aren't available
@@ -12,6 +10,7 @@ extract_GEOSLST_UTC = function(lon, lat, UTC_datetime_seq, path2LST) {
 
   # Convert target grid cell locations to spatial points for later extraction
   point_vect_lonlat = vect(data.frame(lon = lon, lat =  lat),
+                           geom = c("lon", "lat"),
                            crs = 'epsg:4326')
   
   # Obtain the unique UTC dates covered by the specified datetime steps 
@@ -59,13 +58,12 @@ extract_GEOSLST_UTC = function(lon, lat, UTC_datetime_seq, path2LST) {
         
         # Search files for each datetime step for the 10-min window
         GEOS_LST_fn_10minwindow  = unlist(lapply(HHMM_10min_window, function(x) 
-                list.files(path2LST, paste0(format(date_c, '%Y%m%d'), 
-                                            x), full.names = T)))
+                list.files(path2LST, paste0(format(date_c, '%Y%m%d'), x), 
+                           full.names = T)))
         
         # Gap fill the timestep using the neighbouring 10-min window
         if (length(GEOS_LST_fn_10minwindow) == 1) {
           GEOS_LST_fn_10minwindow_mean_r = rast(GEOS_LST_fn_10minwindow)
-          
         } else if ( length(GEOS_LST_fn_10minwindow) ==2) {
           # Take average of the 2 timesteps (`app` is only applicable to multiple layers)
           GEOS_LST_fn_10minwindow_mean_r = app( rast(GEOS_LST_fn_10minwindow),
@@ -79,7 +77,7 @@ extract_GEOSLST_UTC = function(lon, lat, UTC_datetime_seq, path2LST) {
         GEOS_LST_UTC_datetime_list[[j]] = GEOS_LST_fn_10minwindow_mean_r
       }  else {
         
-        # If hour mark data available, directly read it and store
+        # If the UTC hour mark data available, directly read the data and store
         GEOS_LST_UTC_datetime_list[[j]] = rast(GEOS_LST_fn)
       }
     
